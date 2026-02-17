@@ -1,0 +1,25 @@
+# COMP 3610 Assignment 1: Data Pipeline & Visualization Dashboard
+# ================================================================
+# Python package dependencies for NYC Yellow Taxi analysis pipeline.
+# Install with: pip install -r requirements.txt
+
+# Data Processing & Analysis Libraries
+pandas==2.2.3              # DataFrames, data manipulation, and cleaning
+pyarrow==11.0.0            # Parquet format support for efficient data loading
+duckdb==0.10.3             # Embedded SQL engine for analytical queries
+
+# Network & I/O
+requests==2.31.0           # HTTP library for programmatic file downloads
+
+# Visualization Libraries (for 5 dashboard visualizations)
+plotly==5.15.0             # Interactive web-based charts and heatmaps
+
+# Web Dashboard Framework
+streamlit==1.25.0          # Interactive web application framework for deployment
+
+# Type Hints & Compatibility
+typing-extensions==4.5.0   # Enhanced typing support for Python 3.8+
+
+ipykernel==6.25.0            # Jupyter kernel for interactive development and testing
+
+nbformat>=4.2.0                   # Jupyter notebook format support for documentation and testing

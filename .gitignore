@@ -1,0 +1,9 @@
+# Ignore data files and environment
+data/
+.venv/
+*.pyc
+.idea/
+.vscode/
+.env
+__pycache__/
+
