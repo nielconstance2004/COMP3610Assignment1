@@ -18,8 +18,8 @@ plotly==5.15.0             # Interactive web-based charts and heatmaps
 streamlit==1.25.0          # Interactive web application framework for deployment
 
 # Type Hints & Compatibility
-typing-extensions==4.5.0   # Enhanced typing support for Python 3.8+
+typing-extensions
 
 ipykernel==6.25.0            # Jupyter kernel for interactive development and testing
 
-nbformat>=4.2.0                   # Jupyter notebook format support for documentation and testing
+nbformat>=4.2.0              # Jupyter notebook format support for documentation and testing 
