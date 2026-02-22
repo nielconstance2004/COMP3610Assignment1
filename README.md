@@ -166,9 +166,7 @@ The dashboard will open at `http://localhost:8501`.
 ## 🌐 Deployment
 
 1. **Dashboard URL**
-   ```
-   https://comp3610assignment1-sfk7p2vr9cvdpbwydkkwrc.streamlit.app/
-   ```
+   https://comp3610assignment1-sfk7p2vr9cvdpbwydkkwrc.streamlit.app/ 
 
 ### Note on Data Files
 - Data files are **NOT committed** to repository (per .gitignore)
