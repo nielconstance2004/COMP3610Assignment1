@@ -6,7 +6,7 @@ This assignment implements a complete data engineering pipeline for analyzing NY
 
 ---
 
-## 📋 Project Overview
+## 📋 Overview
 
 **Objective:** Build an end-to-end big data pipeline that ingests, transforms, analyzes, and visualizes NYC Yellow Taxi trip records.
 
@@ -54,8 +54,9 @@ Assignment #1/
 
 ### Step 1: Clone Repository
 ```bash
-git clone <your-repo-url>
-cd Assignment\ \#1
+git clone https://github.com/nielconstance2004/COMP3610Assignment1.git 
+cd COMP3610Assignment1
+code .
 ```
 
 ### Step 2: Create Virtual Environment (Recommended)
@@ -164,26 +165,9 @@ The dashboard will open at `http://localhost:8501`.
 
 ## 🌐 Deployment
 
-### Deploy to Streamlit Community Cloud (Free)
-
-1. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Final submission - COMP 3610 Assignment 1"
-   git push origin main
+1. **Dashboard URL**
    ```
-
-2. **Connect GitHub to Streamlit**
-   - Go to https://share.streamlit.io
-   - Sign in with GitHub
-   - Click "New App"
-   - Select your repository
-   - Set main file to `app.py`
-   - Click "Deploy"
-
-3. **Dashboard URL**
-   ```
-   https://share.streamlit.io/<username>/<repo-name>/app.py
+   https://comp3610assignment1-sfk7p2vr9cvdpbwydkkwrc.streamlit.app/
    ```
 
 ### Note on Data Files
@@ -200,43 +184,9 @@ The dashboard will open at `http://localhost:8501`.
 - Datetime parsing verification
 - Hour and day-of-week extraction tests
 
-### Manual Testing
-```bash
-# Test data loading
-python test_app.py
-
 # Check specific queries
 # (Run SQL queries from Part 2 of notebook)
 ```
-
----
-
-## 📦 Key Dependencies
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| pandas | 2.2.3 | Data manipulation and cleaning |
-| pyarrow | 11.0.0 | Parquet file support |
-| duckdb | 0.10.3 | SQL analytics |
-| plotly | 5.15.0 | Interactive visualizations |
-| streamlit | 1.25.0 | Web dashboard framework |
-| requests | 2.31.0 | Programmatic downloads |
-
----
-
-## 🐛 Troubleshooting
-
-### Issue: "Downloaded content looks too small"
-**Solution:** Check internet connection. Dataset should be 200MB+ for trip data.
-
-### Issue: "ModuleNotFoundError: No module named 'streamlit'"
-**Solution:** Run `pip install -r requirements.txt` to install all dependencies.
-
-### Issue: "Data directory not found"
-**Solution:** Dashboard automatically creates `data/raw/` directory on first run.
-
-### Issue: Zone names show "Unknown Zone X"
-**Solution:** Verify taxi_zone_lookup.csv is downloading correctly. Check internet connection.
 
 ---
 
@@ -276,28 +226,5 @@ Streamlit's `@st.cache_data` decorator ensures efficient use of resources.
 **Student:** Nie-l Constance  
 **Course:** COMP 3610 — Big Data Analytics  
 **Semester:** II, 2025-2026  
-**Assignment:** Data Pipeline & Visualization Dashboard  
-**Due Date:** Friday, February 20, 2026  
 
----
-
-## 📞 Support
-
-For issues or questions:
-- **Lecturer:** Mr. Sergio Mathurin (sergio.mathurin@uwi.edu)
-- **Tutor:** Mr. Anton Greenridge (anton.greenridge@my.uwi.edu)
-- **Office Hours:** Mondays 2:00-4:00 PM in DCIT
-
----
-
-## 🔗 Deployed Dashboard URL
-
-**Dashboard:** [Add your Streamlit Community Cloud URL here after deployment]
-
-Example: `https://share.streamlit.io/your-username/assignment-1/app.py`
-
----
-
-**Last Updated:** February 10, 2026  
-**Status:** ✅ Ready for Submission
 

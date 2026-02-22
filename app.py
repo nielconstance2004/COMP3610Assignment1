@@ -281,12 +281,16 @@ def load_data() -> Tuple[pd.DataFrame, pd.DataFrame, Dict[str, int]]:
     except Exception as e:
         st.error(f"Failed to load data: {str(e)}")
         raise
-
+ 
 # ============================================================================
 # STREAMLIT APP: Main Dashboard Layout
 # ============================================================================
 
-st.set_page_config(page_title="NYC Yellow Taxi Dashboard", layout="wide")
+st.set_page_config(
+    page_title="NYC Yellow Taxi Dashboard",
+    page_icon="🚕",
+    layout="wide"
+)
 
 st.title("🚕 NYC Yellow Taxi Dashboard - January 2024")
 st.markdown("""
@@ -400,7 +404,10 @@ filtered = filtered.assign(
 # ============================================================================
 
 # Organize dashboard with tabs
-overview_tab, viz_tab = st.tabs(["📈 Overview & Metrics", "📊 Visualizations & Insights"])
+overview_tab, viz_tab = st.tabs([
+    "📈 Overview & Metrics", 
+    "📊 Visualizations & Insights"
+])
 
 with overview_tab:
     st.markdown("## Summary Statistics")
@@ -432,14 +439,92 @@ with overview_tab:
     )
     col4.metric(
         "Avg Distance",
-        f"{avg_distance:.2f} mi",
+        f"{avg_distance:.2f} miles",
         help="Mean trip distance in miles"
     )
     col5.metric(
         "Avg Duration",
-        f"{avg_duration:.1f} min",
+        f"{avg_duration:.1f} minutes",
         help="Mean trip duration in minutes"
     )
+
+# ============================================================================
+# DETAILED STATISTICS (from full cleaned dataset)
+# ============================================================================
+with st.expander("📋 Detailed Data Quality & Statistics", expanded=False):
+    st.markdown("#### 🧹 Cleaning Summary")
+    # Use the summary dict returned from load_data()
+    col_a1, col_a2, col_a3, col_a4 = st.columns(4)
+    col_a1.metric("Original rows", f"{summary['orig_rows']:,}")
+    col_a2.metric("Removed (nulls)", f"{summary['rows_removed_null']:,}")
+    col_a3.metric("Removed (invalid)", f"{summary['rows_removed_invalid']:,}")
+    col_a4.metric("Removed (time)", f"{summary['rows_removed_time']:,}")
+    col_b1, col_b2, col_b3, col_b4 = st.columns(4)
+    col_b1.metric("Removed (Jan filter)", f"{summary.get('rows_removed_jan', 0):,}")
+    col_b2.metric("Final rows", f"{summary['final_rows']:,}")
+    col_b3.metric("Retention rate", f"{100 * summary['final_rows'] / summary['orig_rows']:.1f}%")
+    
+    st.markdown("#### 📊 Trip Statistics (after cleaning)")
+    # Compute descriptive stats from full cleaned dataset
+    stats = {
+        "Fare ($)": trip_df["fare_amount"].describe(percentiles=[.25,.5,.75,.95]),
+        "Distance (mi)": trip_df["trip_distance"].describe(percentiles=[.25,.5,.75,.95]),
+        "Duration (min)": trip_df["trip_duration_minutes"].describe(percentiles=[.25,.5,.75,.95]),
+        "Speed (mph)": trip_df["trip_speed_mph"].describe(percentiles=[.25,.5,.75,.95])
+    }
+    # Display as a table
+    stats_df = pd.DataFrame(stats).T[["count","mean","std","min","25%","50%","75%","95%","max"]]
+    stats_df = stats_df.rename(columns={
+        "count": "Count", "mean": "Mean", "std": "Std Dev",
+        "min": "Min", "25%": "Q1", "50%": "Median", "75%": "Q3", "95%": "95th %ile", "max": "Max"
+    })
+    st.dataframe(stats_df.style.format("{:,.2f}"), use_container_width=True)
+    
+    st.markdown("#### 💳 Payment Type Breakdown (Full Dataset)")
+    pay_counts = trip_df["payment_type"].map(PAYMENT_TYPE_MAP).fillna("Other").value_counts().reset_index()
+    pay_counts.columns = ["Payment Type", "Trips"]
+    pay_counts["Percentage"] = 100.0 * pay_counts["Trips"] / len(trip_df)
+    st.dataframe(pay_counts.style.format({"Trips": "{:,}", "Percentage": "{:.1f}%"}), use_container_width=True)
+    
+    st.markdown("#### ⏰ Peak Times (Full Dataset)")
+    peak_hour = trip_df.groupby("pickup_hour").size().idxmax()
+    peak_hour_count = trip_df.groupby("pickup_hour").size().max()
+    peak_day = trip_df["pickup_day_of_week"].value_counts().idxmax()
+    peak_day_count = trip_df["pickup_day_of_week"].value_counts().max()
+    
+    col_c1, col_c2 = st.columns(2)
+    col_c1.metric("Peak hour", f"{int(peak_hour)}:00", f"{peak_hour_count:,} trips")
+    col_c2.metric("Peak day", peak_day, f"{peak_day_count:,} trips")
+
+# ============================================================================
+# DATA PREVIEW: Sample of Filtered Records
+# ============================================================================
+with st.expander("📋 Data Preview (Sample of Filtered Records)", expanded=False):
+    st.markdown(f"**Filtered dataset contains:** `{len(filtered):,}` rows")
+    st.markdown(f"**Full cleaned dataset (January 2024):** `{len(trip_df):,}` rows")
+    
+    if not filtered.empty:
+        # Select columns to display (as specified)
+        preview_cols = [
+            "tpep_pickup_datetime", "tpep_dropoff_datetime", 
+            "PULocationID", "DOLocationID", "passenger_count",
+            "trip_distance", "fare_amount", "tip_amount", "total_amount", "payment_type"
+        ]
+        # Take a random sample of up to 10 rows (or less if filtered is smaller)
+        sample_size = min(10, len(filtered))
+        preview_df = filtered[preview_cols].sample(n=sample_size, random_state=42)
+        
+        # Format datetime columns for better readability
+        for col in ["tpep_pickup_datetime", "tpep_dropoff_datetime"]:
+            preview_df[col] = preview_df[col].dt.strftime("%Y-%m-%d %H:%M")
+        
+        # Map payment_type codes to labels for clarity
+        preview_df["payment_type"] = preview_df["payment_type"].map(PAYMENT_TYPE_MAP).fillna("Unknown")
+        
+        st.dataframe(preview_df, use_container_width=True, height=300)
+        st.caption(f"Showing a random sample of {sample_size} rows from the current filter selection.")
+    else:
+        st.warning("No trips match the current filters – cannot display preview.")
     
     # Display data processing summary
     st.markdown("---")
@@ -490,14 +575,16 @@ with viz_tab:
         fig1 = center_titles(
             px.bar(
             busy_zones,
-            x="PU_zone",
-            y="trips",
+            x="trips",
+            y="PU_zone",
+            orientation='h',
             title="Top 10 Pickup Zones",
             labels={"PU_zone": "Pickup Zone", "trips": "Number of Trips"},
             color="trips",
             color_continuous_scale="Viridis"
             )
         )
+        fig1.update_layout(yaxis={"categoryorder":"total ascending"}) # Sort bars by count
         fig1.update_layout(xaxis_tickangle=-45, height=400)
         st.plotly_chart(fig1, use_container_width=True)
         
@@ -566,12 +653,14 @@ with viz_tab:
         st.markdown("## 3. Distribution of Trip Distances")
         st.markdown("What are typical trip lengths in NYC taxi service?")
         
+        hist_data = filtered[filtered["trip_distance"] <= 30]  # Focus on trips <= 20 miles to avoid long tail distortion
+
         fig3 = center_titles(
             px.histogram(
-            filtered,
+            hist_data,
             x="trip_distance",
-            nbins=50,
-            title="Trip Distance Distribution",
+            nbins=60,
+            title="Trip Distance Distribution (Zoomed to 30 miles)",
             labels={"trip_distance": "Trip Distance (miles)"},
             color_discrete_sequence=["#636EFA"]
             )
@@ -614,7 +703,7 @@ with viz_tab:
             names="payment_type",
             values="count",
             title="Payment Type Distribution",
-            hole=0.3
+            hole=0
             )
         )
         fig4.update_layout(height=400)
@@ -640,13 +729,13 @@ with viz_tab:
         st.markdown("When is a demand for taxi service highest? (Weekly and hourly patterns)")
         
         heatmap_data = (
-            filtered.groupby(["pickup_day_of_week", "pickup_hour"])
+            filtered.groupby(["pickup_day_of_week", "pickup_hour"], observed=True)
             .size()
             .reset_index(name="trips")
         )
         
         # Enforce day order (Monday through Sunday)
-        day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        day_order = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         heatmap_data["pickup_day_of_week"] = pd.Categorical(
             heatmap_data["pickup_day_of_week"],
             categories=day_order,
