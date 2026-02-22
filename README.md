@@ -28,7 +28,7 @@ This assignment implements a complete data engineering pipeline for analyzing NY
 ## 📁 Project Structure
 
 ```
-Assignment #1/
+COMP3610Assignment1/
 ├── app.py                              # Streamlit dashboard application
 ├── assignment1.ipynb                   # Jupyter notebook (Parts 1-3)
 ├── requirements.txt                    # Python dependencies
@@ -47,7 +47,7 @@ Assignment #1/
 ## 🚀 Setup Instructions
 
 ### Prerequisites
-- Python 3.8 or higher
+- Python 3.11 or higher
 - pip or conda package manager
 - ~5 GB disk space (for raw data files)
 - Internet connection (for programmatic downloads)
@@ -102,25 +102,11 @@ The dashboard will open at `http://localhost:8501`.
 - **Filter Status:** Current filter selections
 
 ### Visualizations Tab
-1. **Top 10 Pickup Zones (Bar Chart)**
-   - Shows busiest taxi pickup locations
-   - Identifies geographic demand concentration
-
-2. **Average Fare by Hour (Line Chart)**
-   - Hourly fare patterns (0-23 hours)
-   - Reveals time-of-day pricing dynamics
-
-3. **Trip Distance Distribution (Histogram)**
-   - Distribution with 50 bins
-   - Shows prevalence of short vs long trips
-
-4. **Payment Type Breakdown (Pie Chart)**
-   - Split of credit card, cash, and other payment methods
-   - Indicates digital payment adoption
-
-5. **Demand Heatmap (Heatmap)**
-   - Trips by day of week and hour
-   - Reveals weekly and hourly patterns
+1. **Top 10 Pickup Zones (Bar Chart)** – Horizontal bar chart of busiest pickup zones
+2. **Average Fare by Hour (Line Chart)** – Hourly fare patterns (0-23 hours)
+3. **Trip Distance Distribution (Histogram)** – Distribution of trip distances (≤30 miles)
+4. **Payment Type Breakdown (Pie Chart)** – Split of credit card, cash, and other methods
+5. **Demand Heatmap (Heatmap)** – Trips by day of week and hour
 
 ### Interactive Filters
 - 📅 **Date Range:** Select dates within January 2024
@@ -140,10 +126,10 @@ The dashboard will open at `http://localhost:8501`.
 ### Part 2: Data Transformation & Analysis (30 marks)
 - **Data Cleaning:** Removes nulls, invalid fares, invalid distances, temporal anomalies
 - **Feature Engineering:** Creates 4 derived columns:
-  1. `trip_duration_minutes` - Duration in minutes
-  2. `trip_speed_mph` - Distance / duration with zero-handling
-  3. `pickup_hour` - Hour of day (0-23)
-  4. `pickup_day_of_week` - Day name (Monday-Sunday)
+  1. `trip_duration_minutes` – Duration in minutes
+  2. `trip_speed_mph` – Distance / duration with zero-handling
+  3. `pickup_hour` – Hour of day (0-23)
+  4. `pickup_day_of_week` – Day name (Monday-Sunday)
 - **SQL Queries (5 total):** All implemented using DuckDB
   1. Top 10 pickup zones by trip count
   2. Average fare by hour
@@ -165,8 +151,10 @@ The dashboard will open at `http://localhost:8501`.
 
 ## 🌐 Deployment
 
-1. **Dashboard URL**
-   https://comp3610assignment1-sfk7p2vr9cvdpbwydkkwrc.streamlit.app/ 
+### Live Dashboard
+The application is deployed on Streamlit Community Cloud and can be accessed at:
+
+🔗 **https://comp3610assignment1-sfk7p2vr9cvdpbwydkkwrc.streamlit.app/**
 
 ### Note on Data Files
 - Data files are **NOT committed** to repository (per .gitignore)
@@ -182,11 +170,13 @@ The dashboard will open at `http://localhost:8501`.
 - Datetime parsing verification
 - Hour and day-of-week extraction tests
 
-# Check specific queries
-# (Run SQL queries from Part 2 of notebook)
+### SQL Query Testing
+Run the SQL queries from Part 2 of the notebook to verify results:
+```bash
+# Execute all queries in the notebook
+# Results should match the expected output shown in the assignment
 ```
 
----
 
 ## 📈 Performance Notes
 
@@ -208,14 +198,16 @@ Streamlit's `@st.cache_data` decorator ensures efficient use of resources.
 - ✅ Organized into logical sections and functions
 - ✅ Follows PEP 8 style guidelines
 
+
+
 ---
 
 ## 📚 Academic Integrity & AI Disclosure
 
 **AI Tools Used:**
-- Deepseek and VSCode Autocompletions
-- All code reviewed and adjusted by student author
-- Original understanding and implementation by student
+- Deepseek and VSCode Autocompletions for code suggestions and structure
+- All code was reviewed, tested, and adjusted by the student author
+- Final implementation demonstrates original understanding by the student
 
 ---
 
@@ -224,5 +216,9 @@ Streamlit's `@st.cache_data` decorator ensures efficient use of resources.
 **Student:** Nie-l Constance  
 **Course:** COMP 3610 — Big Data Analytics  
 **Semester:** II, 2025-2026  
+**Institution:** University of the West Indies  
+
+---
+
 
 
